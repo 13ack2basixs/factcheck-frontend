@@ -1,5 +1,8 @@
 "use client"
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,29 +12,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, RectangleEllipsis } from "lucide-react";
-import { useState } from "react";
+import LoginModal from "@/components/LoginModal";
 
 const FormSchema = z.object({
   url: z.string(),
-})
+});
 
 export default function Home() {
-  const [showPassword, setShowPassword] = useState(false);
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,59 +33,7 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen gap-16 sm:p-10">
       <div className="gap-[10px] flex justify-end w-full">
-        <Dialog>
-          <form>
-            <DialogTrigger asChild>
-              <Button>Login</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader className="flex items-center">
-                <DialogTitle className="text-2xl text-primary">Welcome Back!</DialogTitle>
-                <DialogDescription>
-                  Please enter your details to sign in.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4">
-                <div className=" relative grid gap-3">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  >
-                    <Mail />
-                  </Button>
-                  <Input id="email" name="email" type="email" placeholder="     Email Address" />
-                </div>
-                <div className="relative grid gap-3">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  >
-                    <RectangleEllipsis />
-                  </Button>
-                  <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="     Password" />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                    // disabled={isLoading}
-                  >
-                    {showPassword ? (<Eye className="w-4 h-4" />) : (<EyeOff className="w-4 h-4" />)}
-                  </Button>
-                </div>
-              </div>
-              <DialogFooter className="flex flex-col items-center">
-                <Button type="submit" className="w-full">Sign In</Button>
-                <p className="text-sm">Don&apos;t have an account? Sign up</p>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
+        <LoginModal />
       </div>
       <main className="flex flex-col gap-[32px] row-start-2 items-center">
         <span className="text-primary text-4xl font-bold">Paste a link. Uncover the truth.</span>

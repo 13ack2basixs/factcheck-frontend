@@ -12,20 +12,20 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-const LoginModal = () => {
+const RegisterModal = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button>Login</Button>
+          <Button>Register</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader className="flex items-center">
-            <DialogTitle className="text-2xl text-primary">Welcome Back!</DialogTitle>
+            <DialogTitle className="text-2xl text-primary">Welcome Aboard</DialogTitle>
             <DialogDescription>
-              Please enter your details to sign in.
+              Create an account and get started.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
@@ -59,8 +59,8 @@ const LoginModal = () => {
                 id="password" 
                 name="password" 
                 type={showPassword ? "text" : "password"} 
-                placeholder="Password" 
-                className="pl-8"
+                placeholder="Password"
+                className="pl-8" 
               />
               <Button
                 type="button"
@@ -73,6 +73,23 @@ const LoginModal = () => {
                 {showPassword ? (<Eye className="w-4 h-4" />) : (<EyeOff className="w-4 h-4" />)}
               </Button>
             </div>
+            <div className="relative grid gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute left-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+              >
+                <RectangleEllipsis />
+              </Button>
+              <Input 
+                id="password" 
+                name="password" 
+                type={showPassword ? "text" : "password"}
+                placeholder="Re-enter Password" 
+                className="pl-8"
+              />
+            </div>
           </div>
           <DialogFooter className="flex flex-col items-center">
             <Button type="submit" className="w-full">Sign In</Button>
@@ -83,4 +100,4 @@ const LoginModal = () => {
   )
 };
 
-export default LoginModal;
+export default RegisterModal;

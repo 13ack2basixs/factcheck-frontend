@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoginModal from "@/components/LoginModal";
+import RegisterModal from "@/components/RegisterModal";
 
 const FormSchema = z.object({
   url: z.string(),
@@ -34,6 +35,7 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen gap-16 sm:p-10">
       <div className="gap-[10px] flex justify-end w-full">
         <LoginModal />
+        <RegisterModal />
       </div>
       <main className="flex flex-col gap-[32px] row-start-2 items-center">
         <span className="text-primary text-4xl font-bold">Paste a link. Uncover the truth.</span>

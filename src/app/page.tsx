@@ -15,6 +15,13 @@ import { Input } from "@/components/ui/input";
 import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
 
+type ScrapeResponse = {
+  status: number;
+  url: string;
+  title: string | null;
+  content: string;
+};
+
 const FormSchema = z.object({
   url: z.string(),
 });
@@ -27,8 +34,19 @@ export default function Home() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    try {
+      const res = await fetch("/api/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: values.url }),
+      });
+
+      const data: ScrapeResponse = await res.json();
+      console.log("data:", data);
+    } catch {
+      form.setError("url", { message: "Unable to link backend API for URL" });
+    }
   }
 
   return (

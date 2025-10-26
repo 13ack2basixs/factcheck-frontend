@@ -46,6 +46,7 @@ export default function Home() {
       });
 
       const data: ScrapeResponse = await res.json();
+      sessionStorage.setItem("scrapeResult", JSON.stringify(data));
       router.push('/report/overview');
     } catch {
       form.setError("url", { message: "Unable to link backend API for URL" });

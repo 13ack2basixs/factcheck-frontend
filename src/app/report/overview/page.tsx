@@ -34,11 +34,15 @@ const items = [
     url: "/report/impact",
     icon: Globe,
   },
-]
+];
+
+const raw = sessionStorage.getItem("scrapeResult");
+const data = raw ? JSON.parse(raw) : null;
 
 export default function Report() {
   return (
     <SidebarProvider>
+      {/* Left sidebar */}
       <Sidebar>
         <SidebarContent>
           <SidebarGroup>
@@ -57,6 +61,29 @@ export default function Report() {
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
+
+      {/* Main content area */}
+      <main>
+        <section className="">
+          <h2 className="">
+            Article Overview
+          </h2>
+
+          <div className="">
+            <p className="">
+              URL: {data.data.url}  
+            </p>
+
+            <p className="">
+              Headline: {data.data.title}
+            </p>
+
+            <p className="">
+              {data.data.content}
+            </p>
+          </div>
+        </section>
+      </main>
       <SidebarTrigger />
     </SidebarProvider>
   )

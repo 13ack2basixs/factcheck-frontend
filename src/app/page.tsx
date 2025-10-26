@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
+import { useRouter } from "next/navigation";
 
 type ScrapeResponse = {
   status: number;
@@ -27,6 +28,8 @@ const FormSchema = z.object({
 });
 
 export default function Home() {
+  const router = useRouter();
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -43,7 +46,7 @@ export default function Home() {
       });
 
       const data: ScrapeResponse = await res.json();
-      console.log("data:", data);
+      router.push('/report/overview');
     } catch {
       form.setError("url", { message: "Unable to link backend API for URL" });
     }

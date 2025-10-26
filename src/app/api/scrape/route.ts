@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ url }),
     });
     const data = await res.json();
-    console.log("data: ", data);
     return NextResponse.json({status: res.status, data: data });
   } catch (e) {
     return NextResponse.json({status: 502, error: "Fetch call failed" + e });

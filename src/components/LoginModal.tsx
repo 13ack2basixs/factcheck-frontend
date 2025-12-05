@@ -11,22 +11,69 @@ import { Eye, EyeOff, Mail, RectangleEllipsis } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 const LoginModal = () => {
+  const {
+      register,
+      handleSubmit,
+      setError,
+      formState: { errors }
+    } = useForm<LoginFormValues>();
+
   const [showPassword, setShowPassword] = useState(false);
   
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const res = await axios.post("http://localhost:8080/api/auth/login", 
+        {
+          email: data.email,
+          password: data.password,
+        }
+      );
+      const token = res.data.accessToken;
+      console.log("Successful login:", res.data);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 400 || err.response?.status === 401) {
+          setError("root", {
+            type: "manual",
+            message: "Invalid email or password",
+          });
+        } else {
+          setError("root", {
+            type: "manual",
+            message: "Something went wrong. Please try again later.",
+          });
+        }
+      }
+    }
+  };
+
   return (
     <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button>Login</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>
+        <Button>Login</Button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader className="flex items-center">
             <DialogTitle className="text-2xl text-primary">Welcome Back!</DialogTitle>
             <DialogDescription>
               Please enter your details to sign in.
             </DialogDescription>
+            {errors.root && (
+              <p className="text-sm text-red-500 text-center">
+                {errors.root.message}
+              </p>
+            )}
           </DialogHeader>
           <div className="grid gap-4">
             <div className=" relative grid gap-3">
@@ -40,10 +87,12 @@ const LoginModal = () => {
               </Button>
               <Input 
                 id="email" 
-                name="email" 
                 type="email" 
                 placeholder="Email Address"
                 className="pl-8"
+                {...register("email", {
+                  required: "Email is required",
+                })}
               />
             </div>
             <div className="relative grid gap-3">
@@ -57,10 +106,12 @@ const LoginModal = () => {
               </Button>
               <Input 
                 id="password" 
-                name="password" 
                 type={showPassword ? "text" : "password"} 
                 placeholder="Password" 
                 className="pl-8"
+                {...register("password", {
+                  required: "Password is required",
+                })}
               />
               <Button
                 type="button"
@@ -74,11 +125,11 @@ const LoginModal = () => {
               </Button>
             </div>
           </div>
-          <DialogFooter className="flex flex-col items-center">
+          <DialogFooter className="flex flex-col items-center pt-5">
             <Button type="submit" className="w-full">Sign In</Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   )
 };

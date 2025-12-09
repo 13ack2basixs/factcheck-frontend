@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 type LoginFormValues = {
   email: string;
@@ -26,6 +27,8 @@ const LoginModal = () => {
       setError,
       formState: { errors }
     } = useForm<LoginFormValues>();
+  
+  const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   
@@ -37,7 +40,7 @@ const LoginModal = () => {
           password: data.password,
         }
       );
-      const token = res.data.accessToken;
+      login(res.data); // Update global auth state
       console.log("Successful login:", res.data);
     } catch (err) {
       if (axios.isAxiosError(err)) {

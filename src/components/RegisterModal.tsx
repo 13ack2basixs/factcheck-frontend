@@ -185,6 +185,9 @@ const RegisterModal = () => {
           {errors.root?.type === "success" && (
             <span className="flex justify-center items-center text-green-500">{errors.root.message}</span>
           )}
+          {errors.root?.type !== "success" && errors.root?.message && (
+            <p className="text-red-500 text-center">{errors.root.message}</p>
+          )}
           <DialogFooter className="flex flex-col items-center">
             <Button type="submit" className="w-full">Sign In</Button>
           </DialogFooter>

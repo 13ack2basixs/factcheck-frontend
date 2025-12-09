@@ -25,6 +25,7 @@ const RegisterModal = () => {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors }
   } = useForm<RegisterFormValues>();
 
@@ -32,7 +33,7 @@ const RegisterModal = () => {
 
   const onSubmit = async (data: RegisterFormValues) => {
     try {
-      const res = await axios.post("http://localhost:8080/api/auth/register", 
+      await axios.post("http://localhost:8080/api/auth/register", 
         {
           email: data.email,
           password: data.password,
@@ -42,14 +43,29 @@ const RegisterModal = () => {
             "Content-Type": "application/json",
           },
         },
-      );  
-      console.log("Registered:", res.data);
+      );
+      setError("root", {
+        type: "success",
+        message: "Account created successfully!",
+      });
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log("Status:", err.response?.status);
-        console.log("Backend output:", err.response?.data);
+        if (err.response?.status === 400 || err.response?.status === 409) {
+          setError("root", {
+            type: "server",
+            message: "Failed to register. Email may already be in use.",
+          });
+        } else {
+          setError("root", {
+            type: "server",
+            message: "Something went wrong. Please try again later.",
+          });
+        }
       } else {
-        console.error("Network error:", err);
+        setError("root", {
+          type: "server",
+          message: "Unexpected error. Please try again.",
+        });
       }
     }
   };
@@ -166,7 +182,10 @@ const RegisterModal = () => {
               </Button>
             </div>
           </div>
-          <DialogFooter className="flex flex-col items-center pt-5">
+          {errors.root?.type === "success" && (
+            <span className="flex justify-center items-center text-green-500">{errors.root.message}</span>
+          )}
+          <DialogFooter className="flex flex-col items-center">
             <Button type="submit" className="w-full">Sign In</Button>
           </DialogFooter>
         </form>
